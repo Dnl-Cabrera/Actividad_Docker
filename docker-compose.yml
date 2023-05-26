@@ -1,0 +1,33 @@
+# Use root/example as user/password credentials
+version: '3.8'
+
+services:
+
+  php-apache-environment: #este es el nombre del servicio
+    container_name: php-apache #Este es el nombre del container que contiene el servicio.
+    image: php:8.0-apache #Esta imagen sale del sitio web https://hub.docker.com/layers/library/php/8.0-apache/images/sha256-6e2ff5f65d396fcc2a59e3aa9ee838a0f1ca4932bb35949d27a5c5a4646bd467?context=explore
+    volumes:
+      - ./php/src:/var/www/html/ #se crea la carpeta php/src donde se suben los scripts php, 
+      #los cuales se guardaran en la carpeta del contenedor /var/www/html/
+    ports:
+      - 8000:80 #el puerto 8000 es donde se ejecuta en la computadora localhost:8000 y el puerto 80 es el puerto de
+      #donde sale del contenedor php-apache
+    depends_on:
+      - db
+    build:
+      context: ./php #Indicamos la ubicacion donde se encuentra el archivo a instalar
+      dockerfile: Dockerfile #indicamos el nombrel del archivo dockerfile
+
+
+  db:
+    container_name: db
+    image: mysql
+    restart: always
+    environment:
+        MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
+        MYSQL_DATABASE: MY_DATABASE
+        MYSQL_USER: MYSQL_USER
+        MYSQL_PASSWORD: MYSQL_PASSWORD
+    ports:
+        - "9906:3306"
+    
